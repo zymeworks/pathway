@@ -1,0 +1,31 @@
+{
+  "name": "Pathway",
+  "version": "0.0.0",
+  "description": "Small library package framework ",
+  "main": "pathway.js",
+  "scripts": {
+    "test": "node_modules/karma/bin/karma start --single-run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zymeworks/pathway.git"
+  },
+  "keywords": [
+    "module",
+    "package",
+    "dependency",
+    "library"
+  ],
+  "author": "Ruaidhri Devery",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zymeworks/pathway/issues"
+  },
+  "homepage": "https://github.com/zymeworks/pathway",
+  "devDependencies": {
+    "karma": "~0.12.24",
+    "karma-chrome-launcher": "~0.1.5",
+    "karma-jasmine": "~0.1.5",
+    "karma-phantomjs-launcher": "^0.1.4"
+  }
+}
