@@ -1,0 +1,9 @@
+.nfs*
+.*_*
+.DS_Store
+node_modules/
+.module-cache/
+**/.module-cache/
+*.swp
+*.zip
+tests-karma.xml
