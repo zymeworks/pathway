@@ -2,6 +2,7 @@
 .*_*
 .DS_Store
 node_modules/
+build/
 .module-cache/
 **/.module-cache/
 *.swp
