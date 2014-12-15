@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "description": "Small library package framework ",
   "main": "pathway.js",
-  "scripts": {
-    "test": "node_modules/karma/bin/karma start --single-run"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/zymeworks/pathway.git"
@@ -31,5 +28,10 @@
     "karma-chrome-launcher": "~0.1.5",
     "karma-jasmine": "~0.1.5",
     "karma-phantomjs-launcher": "^0.1.4"
+  },
+  "scripts": {
+    "build": "gulp build",
+    "test": "gulp test",
+    "test-min": "gulp test-min"
   }
 }
