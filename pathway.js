@@ -14,15 +14,17 @@ function makePathway(libName, global) {
    * create the library manifest and assign to
    * the global object with the prefix '@'
    */
-  var library = global['@' + libName] = function pathway(a, b) {
-    var pkgN = '/', init;
+  var library = global['@' + libName] = function pathway(a, b, c) {
+    var pkgN = '/', init, cxt;
     switch (typeof a) {
       case 'string':
         pkgN = a;
         init = b;
+        cxt = c;
         break;
       case 'function':
         init = a;
+        cxt = b;
         break;
     }
     var pkg = packages.$$(pkgN);
@@ -33,16 +35,17 @@ function makePathway(libName, global) {
       if (pkg instanceof Array) {
         pkg.push(init);
       } else {
-        throw new Error("Package " + _fmtAddr(libName, pkgN) + " has already been initialized");
+        throw new Error("Pathway: Package " + _fmtAddr(pkgN) + " has already been initialized." + (cxt ? " (from " + cxt + ")" : ""));
       }
     } else {
-      _initPackage(pkgN);
+      cxt = b;
+      _initPackage(pkgN, cxt);
     }
 
     if ((pkg = packages.$$(pkgN)) === 'In Progress') {
       return 'In Progress';
     } else {
-      return _copy(pkg);
+      return pkg;
     }
   };
   library['import'] = library;
@@ -51,6 +54,7 @@ function makePathway(libName, global) {
    * in-script import function
    */
   function _importer(self, from) {
+    var cxt = _fmtAddr(from);
     return function (to) {
       if (to === '.') return self;
       //
@@ -60,17 +64,17 @@ function makePathway(libName, global) {
           toPkg = ref[3];
       if (toLib) {
         if (typeof global[toLib] === 'function') {
-          pkg = global[toLib](toPkg);
+          pkg = global[toLib](toPkg, cxt);
         } else if (toLib.substr(1) in global) {
           return global[toLib.substr(1)];
         } else {
-          throw new Error("Unable to find library: " + to);
+          throw new Error("Pathway: Failed to import library: " + to + " from " + cxt);
         }
       } else {
-        pkg = library(toPkg);
+        pkg = library(toPkg, cxt);
       }
       if (pkg === 'In Progress') {
-        throw new Error("Circular import between: " + _fmtAddr(libName, from) + " and " + (to || '/'));
+        throw new Error("Pathway: Circular import between: " + cxt + " and " + (to || '/'));
       }
       return pkg;
     };
@@ -78,12 +82,16 @@ function makePathway(libName, global) {
 
   /**
    * execute init functions and obtain exports
+   *
+   * @param  {String} pkName  Identifier string of the package to initialize
+   * @param  {String} cxt     A string which identifies the caller, useful for error messages
+   * @return {Object}         A map of the exported fields from the package
    */
-  function _initPackage(pkName) {
+  function _initPackage(pkName, cxt) {
     var pkg = packages.$$(pkName),
         inits, self, exp;
     if (pkg === void 0) {
-      throw new Error("This package is fiction: '" + _fmtAddr(libName, pkName) + "'");
+      throw new Error("Pathway: Failed to import package: '" + _fmtAddr(pkName) + "'" + (cxt ? " from: " + cxt : ""));
     } else if (pkg instanceof Array) {
       inits = pkg;
       pkg = {};
@@ -93,12 +101,12 @@ function makePathway(libName, global) {
         exp = inits[i](_importer(self, pkName), self);
         switch (typeof exp) {
           case 'object':
-            _merge(pkg, exp, _fmtAddr(libName, pkName));
+            _merge(pkg, exp, _fmtAddr(pkName));
             break;
           case 'undefined':
             break;
           default:
-            throw new Error('Invalid export: \'' + exp + '\' from ' + _fmtAddr(libName, pkName));
+            throw new Error('Pathway: Invalid export: \'' + exp + '\' from ' + _fmtAddr(pkName));
         }
       }
       packages.$$(pkName, pkg);
@@ -121,7 +129,7 @@ function makePathway(libName, global) {
     var key, er;
     for (key in from) {
       if (to.hasOwnProperty(key)) {
-        er = new Error("Key conflict: '" + key + "'");
+        er = new Error("Pathway: Key conflict: '" + key + "'");
         if (cxt) er.message += ' at ' + cxt;
         throw er;
       }
@@ -134,8 +142,8 @@ function makePathway(libName, global) {
     return _merge({}, obj);
   }
 
-  function _fmtAddr(lib, pkg) {
-    return "@" + lib + '/' + pkg.replace(/^\//, '');
+  function _fmtAddr(pkg) {
+    return "@" + libName + '/' + pkg.replace(/^\//, '');
   }
 
   return library;

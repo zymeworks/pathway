@@ -31,7 +31,7 @@ describe("makePathway", function () {
     });
     expect(function() {
       global['@testLibrary']();
-    }).toThrow("This package is fiction: '@testLibrary/non/existent/package'");
+    }).toThrow("Pathway: Failed to import package: '@testLibrary/non/existent/package' from: @testLibrary/");
   });
 
   it("should throw an error if its export is invalid ", function () {
@@ -40,7 +40,7 @@ describe("makePathway", function () {
     });
     expect(function() {
       global['@testLibrary']();
-    }).toThrow('Invalid export: \'123\' from @testLibrary/');
+    }).toThrow("Pathway: Invalid export: '123' from @testLibrary/");
   });
 
 
@@ -49,14 +49,14 @@ describe("makePathway", function () {
     global['@testLibrary'](function () {});
     global['@testLibrary']();
     expect(function () {
-      global['@testLibrary'](function () {});
-    }).toThrow('Package @testLibrary/ has already been initialized');
+      global['@testLibrary'](function () {}, 'test');
+    }).toThrow('Pathway: Package @testLibrary/ has already been initialized. (from test)');
   });
 
   it("should throw if you try to init a package that doesn't exist", function() {
     expect(function () {
       global['@testLibrary']('doesnt/exist');
-    }).toThrow("This package is fiction: '@testLibrary/doesnt/exist'");
+    }).toThrow("Pathway: Failed to import package: '@testLibrary/doesnt/exist'");
   });
 
   describe("between packages", function () {
@@ -125,7 +125,12 @@ describe("makePathway", function () {
       });
       expect(function () {
         global['@testLibrary']();
-      }).toThrow('Circular import between: @testLibrary/sub/other and /');
+      }).toThrow('Pathway: Circular import between: @testLibrary/sub/other and /');
+    });
+
+    it("should allow mutation of package objects", function() {
+      global['@testLibrary']('sub').b = 'test';
+      expect(global['@testLibrary']().sub.b).toEqual('test');
     });
   });
 
@@ -146,7 +151,7 @@ describe("makePathway", function () {
       });
       expect(function () {
         global['@testLibrary']();
-      }).toThrow('Unable to find library: @doesntExist')
+      }).toThrow('Pathway: Failed to import library: @doesntExist from @testLibrary/');
     });
 
     it("should be obtained from global prototype", function() {
@@ -191,7 +196,7 @@ describe("makePathway", function () {
       });
       expect(function () {
         global['@testLibrary']('a/b/c');
-      }).toThrow('Circular import between: @testLibrary2/ and @testLibrary/a/b/c');
+      }).toThrow('Pathway: Circular import between: @testLibrary2/ and @testLibrary/a/b/c');
     });
   });
 });
