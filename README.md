@@ -52,3 +52,9 @@ __Notes:__
 * Any JavaScript object can be used in place of the ‘window’ object, so long as inter library dependencies are reachable through that object
 * Like Go, circular dependencies between modules are not supported
 * Load order only matters within modules that use own package references during initialization.
+
+__Links:__
+
+* [Pathway Build Files](https://drone.io/github.com/zymeworks/pathway/files)
+* Go naming conventions, [Effective Go](https://golang.org/doc/effective_go.html#names)
+* Dependency Inversion, [Wikipedia](http://en.wikipedia.org/wiki/Dependency_inversion_principle)
