@@ -1,3 +1,4 @@
+[![Build Status](https://drone.io/github.com/zymeworks/pathway/status.png)](https://drone.io/github.com/zymeworks/pathway/latest)
 
 ##Pathway
 
