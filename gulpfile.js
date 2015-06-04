@@ -6,18 +6,17 @@ var gulp    = require('gulp'),
 
 gulp.task('build', function () {
   return gulp.src('pathway.js')
-    .pipe(gulp.dest('build/'))
     .pipe(uglify())
     .pipe(rename({ suffix: '.min' }))
-    .pipe(gulp.dest('build/'));
+    .pipe(gulp.dest('./'));
 });
 
 gulp.task('test', function (done) {
-  karmaTest(['build/pathway.js', 'pathway.spec.js'], done);
+  karmaTest(['pathway.js', 'pathway.spec.js'], done);
 });
 
 gulp.task('test-min', function (done) {
-  karmaTest(['build/pathway.min.js', 'pathway.spec.js'], done);
+  karmaTest(['pathway.min.js', 'pathway.spec.js'], done);
 });
 
 /**
