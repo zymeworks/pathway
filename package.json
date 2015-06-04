@@ -1,7 +1,7 @@
 {
   "name": "Pathway",
-  "version": "0.0.0",
-  "description": "Small library package framework ",
+  "version": "1.0.0",
+  "description": "JavaScript library package system inspired by Go modules",
   "main": "pathway.js",
   "repository": {
     "type": "git",
