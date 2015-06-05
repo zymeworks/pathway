@@ -75,6 +75,6 @@ $import therefore, removes any practical need for direct global references in yo
 ### Links
 
 * [Pathway Build Files](https://drone.io/github.com/zymeworks/pathway/files)
-* Gulp integration [gulp-pathway](https://golang.org/doc/effective_go.html#names)
+* Gulp integration [gulp-pathway](https://github.com/zymeworks/gulp-pathway)
 * Go naming conventions, [Effective Go](https://golang.org/doc/effective_go.html#names)
 * Dependency Inversion, [Wikipedia](http://en.wikipedia.org/wiki/Dependency_inversion_principle)
