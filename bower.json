@@ -1,0 +1,16 @@
+{
+  "name": "pathway",
+  "main": "pathway.js",
+  "version": "1.0.0",
+  "homepage": "https://github.com/zymeworks/pathway",
+  "authors": [
+    "Ruaidhri Devery <ruaidhri@zymeworks.com>"
+  ],
+  "description": "JS library package system inspired by Go modules",
+  "keywords": [
+    "module",
+    "package",
+    "dependency-inversion"
+  ],
+  "license": "MIT"
+}
