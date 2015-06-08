@@ -4,9 +4,11 @@
 
 ####JavaScript library package system inspired by Go modules
 
-The purpose of this tool is to make high-level modules simpler to implement in JavaScript by separating the process from script loading and making it synchronous.
+This is a bare bones tool to achieve high-level modules in JavaScript. The aim is to define a convention for wiring up modular code in a way that is flexible and as uncomplicated as possible.
 
-Pathway is designed for creating source libraries. This comes into play for shared libraries and larger projects where dependency inversion is useful.
+The approach is to separate modules from script loading and make the bootstrap process up-front and synchronous.
+
+Pathway is intended for use in projects with a build system. Pathway itself has minimal code to facilitate being inlined for deployment.
 
 ### API
 
@@ -17,6 +19,8 @@ Define a pathway library
 	root['@myLib'];
 	// => function pathway() {...}
 
+<code>root</code> here is your designated global object. It could be <code>window</code>, or some sort of sandbox.
+
 Add a package closure:
 
 	root['@myLib']('some/pkg', function ($import, $package) {
@@ -24,19 +28,19 @@ Add a package closure:
 		var p2 = $import('@libTwo/external/pkg'); // import from another pathway lib
 		var underscoreLib = $import('@_'); // global reference fall back
 
-		$package.ourSecret = 'shared package private variable';
+		$package.ourSecret = 'shared package private value';
 
 		return {
-			exportedField: 'exported public variable'
+			exportedField: 'exported public value'
 		};
 	});
 
-The module ‘some/pkg’ can have as many of these closures as needed. The exported fields are merged into a flat public object. Key conflicts will throw an error.
+The module ‘some/pkg’ can have as many of these closures as needed. The exported fields are merged into a module API object. Key conflicts will throw an error.
 
 Import from outside:
 
 	root['@myLib'].import('some/pkg');
-	// => { exportedField: 'exported public variable' }
+	// => { exportedField: 'exported public value' }
 
 Nothing more to it.
 
@@ -67,7 +71,6 @@ $import therefore, removes any practical need for direct global references in yo
 
 * A module is defined using one or more initialization functions
 * '$package' is an object shared by closures within the same package
-* This is __not__ related to script loading, a file is not a module.
 * Any JavaScript object can be used as 'root' object (eg window), so long as inter library dependencies are reachable through that object
 * Like Go, circular dependencies between modules are not supported (or desired)
 * Initialization order only matters within modules that use own package references during init.
